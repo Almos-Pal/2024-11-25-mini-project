@@ -3,7 +3,7 @@ import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 
-@Controller('team')
+@Controller('teams')
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
