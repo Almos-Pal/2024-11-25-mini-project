@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class PlayerService {
+  constructor(private readonly db: PrismaService) {}
+  
   create(createPlayerDto: CreatePlayerDto) {
     return 'This action adds a new player';
   }
 
   findAll() {
-    return `This action returns all player`;
+    return this.db.player.findMany();
   }
 
   findOne(id: number) {

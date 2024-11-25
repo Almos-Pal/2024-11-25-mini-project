@@ -1,1 +1,4 @@
-export class Team {}
+export class Team {
+    teamID: number;
+    country: string;
+}
