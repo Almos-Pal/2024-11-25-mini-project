@@ -27,6 +27,26 @@ export class TeamService {
     return team;
   }
   
+  async addPlayerToTeam(teamID: number, playerID: number) {
+    const team = await this.db.team.findUnique({where: {teamID: teamID}});
+    const player = await this.db.player.findUnique({where: {PlayerID: playerID}});
+    if (!team || !player) {
+      throw new NotFoundException(`Team or player not found`);
+    }
+    
+    return this.db.team.update({
+      where: {teamID: teamID},
+      data: {
+        players: {
+          connect: {
+            PlayerID: playerID
+          } 
+        }
+      }
+    });
+  }
+
+
   async findAll(includePlayers: boolean) {
     if (includePlayers) {
       return this.db.team.findMany({

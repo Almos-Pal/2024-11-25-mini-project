@@ -12,6 +12,11 @@ export class TeamController {
     return this.teamService.create(createTeamDto);
   }
 
+  @Post('/:teamID/addPlayer/:playerID')
+  async addPlayerToTeam(@Param('teamID') teamID: string, @Param('playerID') playerID: string) {
+    return this.teamService.addPlayerToTeam(+teamID, +playerID);
+  }
+
   @Get()
   findAll() {
     return this.teamService.findAll(false);
