@@ -16,7 +16,11 @@ export class PlayerService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} player`;
+    return this.db.player.findUnique({
+      where: {
+        PlayerID: id
+      }
+    })
   }
 
   update(id: number, updatePlayerDto: UpdatePlayerDto) {
