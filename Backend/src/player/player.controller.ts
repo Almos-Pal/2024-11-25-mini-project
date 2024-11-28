@@ -18,8 +18,8 @@ export class PlayerController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.playerService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return this.playerService.findOne(+id); // The service handles the error
   }
 
   @Patch(':id')
