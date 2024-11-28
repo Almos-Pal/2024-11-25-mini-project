@@ -23,12 +23,12 @@ export class PlayerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+  async update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
     return this.playerService.update(+id, updatePlayerDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  remove(@Param('id') id: string) {
     return this.playerService.remove(+id);
   }
 }

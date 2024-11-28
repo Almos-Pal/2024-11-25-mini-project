@@ -35,8 +35,19 @@ export class PlayerService {
     return player;
   }
 
-  update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return `This action updates a #${id} player`;
+  async update(id: number, updatePlayerDto: UpdatePlayerDto) {
+    const player = await this.db.player.findUnique({where: { PlayerID: id }});
+    
+    if (!player) {
+      throw new NotFoundException(`Player with ID ${id} not found`);
+    }
+
+    return await this.db.player.update({
+      where: 
+        { PlayerID: id },
+      data: updatePlayerDto
+    })
+  
   }
 
   async remove(id: number) {
@@ -51,7 +62,6 @@ export class PlayerService {
           { PlayerID: id }
       })
     }
-
-  
   }
+
 }
