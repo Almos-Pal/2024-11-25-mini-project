@@ -7,8 +7,16 @@ import { PrismaService } from 'src/prisma.service';
 export class PlayerService {
   constructor(private readonly db: PrismaService) {}
   
-  create(createPlayerDto: CreatePlayerDto) {
-    return 'This action adds a new player';
+  async create(createPlayerDto: CreatePlayerDto) {
+    const { name, goalCount, birthDate } = createPlayerDto;
+  
+    return this.db.player.create({
+      data: {
+        name,
+        goalCount,
+        birthDate: new Date(birthDate), 
+      },
+    });
   }
 
   findAll() {

@@ -23,7 +23,7 @@ model Player {
   PlayerID Int @id @default(autoincrement())
   name String
   goalCount Int @default(0)
-  birthDate DateTime
-  team Team @relation(fields: [teamID], references: [teamID])
-  teamID Int
+  birthDate DateTime @db.Date
+  team Team? @relation(fields: [teamID], references: [teamID])
+  teamID Int? 
 }

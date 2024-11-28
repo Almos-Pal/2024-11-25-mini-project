@@ -8,7 +8,7 @@ export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
   @Post()
-  create(@Body() createPlayerDto: CreatePlayerDto) {
+  async create(@Body() createPlayerDto: CreatePlayerDto) {
     return this.playerService.create(createPlayerDto);
   }
 
@@ -19,7 +19,7 @@ export class PlayerController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.playerService.findOne(+id); // The service handles the error
+    return this.playerService.findOne(+id); 
   }
 
   @Patch(':id')
