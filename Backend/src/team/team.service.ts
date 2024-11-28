@@ -64,7 +64,19 @@ export class TeamService {
     return `This action updates a #${id} team`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} team`;
+  async remove(id: number) {
+    const team = await this.db.team.findUnique({where: {teamID: id}});
+
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${id} not found`);
+    } else {
+      
+      return this.db.team.delete({
+        where: {
+          teamID: id
+        }
+      });
+    }
+
   }
 }
