@@ -8,7 +8,9 @@ export class TeamService {
   constructor (private readonly db: PrismaService) {}
 
   create(createTeamDto: CreateTeamDto) {
-    return 'This action adds a new team';
+    return this.db.team.create({
+      data: createTeamDto
+    });
   }
 
   
@@ -60,8 +62,21 @@ export class TeamService {
     }
   }
   
-  update(id: number, updateTeamDto: UpdateTeamDto) {
-    return `This action updates a #${id} team`;
+  async update(id: number, updateTeamDto: UpdateTeamDto) {
+
+    const team = await this.db.team.findUnique({where: {teamID: id}});
+
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${id} not found`);
+    }
+    else {
+      return await this.db.team.update({
+        where: {
+          teamID: id
+        },
+        data: updateTeamDto
+      });
+    }
   }
 
   async remove(id: number) {
