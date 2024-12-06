@@ -1,4 +1,4 @@
-import { IsDate,  IsDefined, IsNumber, IsString } from "class-validator";
+ import { IsDate,  IsDefined, IsNumber, IsString } from "class-validator";
 
 export class CreatePlayerDto {
     @IsDefined()

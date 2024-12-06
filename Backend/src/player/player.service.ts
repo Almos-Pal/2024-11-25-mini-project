@@ -6,15 +6,15 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class PlayerService {
   constructor(private readonly db: PrismaService) {}
-  
+
   async create(createPlayerDto: CreatePlayerDto) {
     const { name, goalCount, birthDate } = createPlayerDto;
-  
+
     return this.db.player.create({
       data: {
         name,
         goalCount,
-        birthDate: new Date(birthDate), 
+        birthDate: new Date(birthDate),
       },
     });
   }
@@ -25,7 +25,7 @@ export class PlayerService {
 
   async findOne(id: number) {
     const player = await this.db.player.findUnique({
-      where: { PlayerID: id },
+      where: { playerID: id },
     });
 
     if (!player) {
@@ -36,34 +36,27 @@ export class PlayerService {
   }
 
   async update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    const player = await this.db.player.findUnique({where: { PlayerID: id }});
-    
+    const player = await this.db.player.findUnique({ where: { playerID: id } });
+
     if (!player) {
       throw new NotFoundException(`Player with ID ${id} not found`);
     }
 
     return await this.db.player.update({
-      where: 
-        { PlayerID: id },
-      data: updatePlayerDto
-    })
-  
+      where: { playerID: id },
+      data: updatePlayerDto,
+    });
   }
 
   async remove(id: number) {
-    const player = await this.db.player.findUnique({where: { PlayerID: id }});
+    const player = await this.db.player.findUnique({ where: { playerID: id } });
 
     if (!player) {
       throw new NotFoundException(`Player with ID ${id} not found`);
-    }
-    else {
+    } else {
       return this.db.player.delete({
-        where: 
-          { PlayerID: id }
-      })
+        where: { playerID: id },
+      });
     }
   }
-
-  
-
 }
