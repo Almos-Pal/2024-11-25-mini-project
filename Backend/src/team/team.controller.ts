@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 
-@Controller('team')
+@Controller('teams')
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
@@ -12,9 +20,22 @@ export class TeamController {
     return this.teamService.create(createTeamDto);
   }
 
+  @Post('/:teamID/addPlayer/:playerID')
+  async addPlayerToTeam(
+    @Param('teamID') teamID: string,
+    @Param('playerID') playerID: string,
+  ) {
+    return this.teamService.addPlayerToTeam(+teamID, +playerID);
+  }
+
   @Get()
   findAll() {
-    return this.teamService.findAll();
+    return this.teamService.findAll(false);
+  }
+
+  @Get('players')
+  findAllWithPlayers() {
+    return this.teamService.findAll(true);
   }
 
   @Get(':id')

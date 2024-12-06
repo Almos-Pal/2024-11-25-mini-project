@@ -1,0 +1,355 @@
+openapi: 3.0.0
+info:
+  title: Mini Project API
+  description: Api documentation for Mini Project
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: players
+    description: Player management
+  - name: teams
+    description: Team management
+
+paths:
+  /players:
+    get:
+      tags:
+        - players
+      summary: Get all players
+      responses:
+        '200':
+          $ref: '#/components/responses/PlayersResponse'
+    post:
+      tags:
+        - players
+      summary: Create a new player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlayerRequest'
+            examples:
+              CreatePlayerRequestExample:
+                $ref: '#/components/examples/CreatePlayerRequestExample'
+
+      responses:
+        '201':
+          $ref: '#/components/responses/PlayerResponse'
+          examples:
+            CreatePlayerResponseExample:
+              $ref: '#/components/examples/CreatePlayerResponseExample'
+  /players/{id}:
+    get:
+      tags:
+        - players
+      summary: Get player by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Player id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Player found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '404':
+          description: Player not found
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - players
+      summary: Update player by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Player id
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePlayerRequest'
+            examples:
+              UpdatePlayerRequestExample:
+                $ref: '#/components/examples/UpdatePlayerRequestExample'
+
+      responses:
+        '200':
+          $ref: '#/components/responses/PlayerResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - players
+      summary: Delete player by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Player id
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Player deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /teams:
+    get:
+      tags:
+        - teams
+      summary: Get all teams
+      responses:
+        '200':
+          $ref: '#/components/responses/TeamsResponse'
+    post:
+      tags:
+        - teams
+      summary: Create a new team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+            examples:
+              CreateTeamRequestExample:
+                value:
+                  country: France
+      responses:
+        '201':
+          $ref: '#/components/responses/TeamResponse'
+          examples:
+            CreateTeamResponseExample:
+              value:
+                teamID: 1
+                country: France
+
+  /teams/{id}:
+    get:
+      tags:
+        - teams
+      summary: Get team by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Team id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Team found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          description: Team not found
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - teams
+      summary: Update team by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Team id
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+            examples:
+              UpdateTeamRequestExample:
+                value:
+                  country: France
+      responses:
+        '200':
+          $ref: '#/components/responses/TeamResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - teams
+      summary: Delete team by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Team id
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Team deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /teams/players:
+    get:
+      tags:
+        - teams
+      summary: Get all teams with players
+      responses:
+        '200':
+          $ref: '#/components/responses/TeamsWithPlayersResponse'
+
+  # addPlayer should be players instead
+  /teams/{teamID}/addPlayer/{playerID}:
+    post:
+      tags:
+        - teams
+      summary: Add player to team
+      parameters:
+        - name: teamID
+          in: path
+          required: true
+          description: Team id
+          schema:
+            type: integer
+        - name: playerID
+          in: path
+          required: true
+          description: Player id
+          schema:
+            type: integer
+      responses:
+        '201':
+          $ref: '#/components/responses/TeamsResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    Player:
+      type: object
+      properties:
+        playerID:
+          type: integer
+        name:
+          type: string
+        goalCount:
+          type: integer
+        birthDate:
+          type: string
+          format: date
+        teamID:
+          type: number
+    UpdatePlayerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        goalCount:
+          type: integer
+        birthDate:
+          type: string
+          format: date
+
+    CreatePlayerRequest:
+      type: object
+      required:
+        - name
+        - goalCount
+        - birthDate
+      allOf:
+        - $ref: '#/components/schemas/UpdatePlayerRequest'
+
+    Team:
+      type: object
+      properties:
+        teamID:
+          type: integer
+        country:
+          type: string
+    Teams:
+      type: array
+      items:
+        $ref: '#/components/schemas/Team'
+    TeamWithPlayers:
+      allOf:
+        - $ref: '#/components/schemas/Team'
+        - type: object
+          properties:
+            players:
+              type: array
+              items:
+                $ref: '#/components/schemas/Player'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+        statusCode:
+          type: integer
+
+  responses:
+    PlayerResponse:
+      description: Player response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Player'
+    PlayersResponse:
+      description: List of players response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Player'
+
+    TeamsWithPlayersResponse:
+      description: List of teams with players response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TeamWithPlayers'
+    TeamsResponse:
+      description: Team response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Teams'
+    TeamResponse:
+      description: Team response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Team'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  examples:
+    CreatePlayerRequestExample:
+      value:
+        name: John Doe
+        goalCount: 0
+        birthDate: 2000-01-01
+    UpdatePlayerRequestExample:
+      value:
+        name: John Doe
+        goalCount: 5
+        birthDate: 2000-01-01
